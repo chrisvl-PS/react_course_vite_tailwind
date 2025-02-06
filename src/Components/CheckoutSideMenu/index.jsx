@@ -1,6 +1,7 @@
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { ShoppingCartContext } from '../../Context'
-import { OrderCard } from '../../Components/OrderCard';
+import { OrderCard } from '../../Components/OrderCard'
 import { totalPrice } from '../../utils'
 import './styles.css'
 
@@ -10,6 +11,17 @@ const CheckoutSideMenu = () => {
     const handleDelete = (id) => {
         const filteredProducts = context.cartProducts.filter(product => product.id != id)
         context.setCardProducts(filteredProducts)
+    }
+
+    const handleCheckout = () => {
+        const orderToAdd = {
+            date: '01.02.2025',
+            products: context.cartProducts,
+            totalProducts: context.cartProducts.length,
+            totalPrice: totalPrice(context.cartProducts)
+        }
+        context.setOrder([...context.order, orderToAdd]);
+        context.setCartProducts([]);
     }
 
     return (
@@ -23,9 +35,9 @@ const CheckoutSideMenu = () => {
                     <path fillRule='evenodd' d='M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z' clipRule='evenodd' />
                 </svg>
             </div>
-            <div className='px-6 overflow-y-scroll'>
+            <div className='px-6 overflow-y-scroll flex-1'>
                 {
-                    context.cartProducts.map((product) => (
+                    context.cartProducts.map(product => (
                         <OrderCard
                             key={product.id}
                             id={product.id}
@@ -37,11 +49,14 @@ const CheckoutSideMenu = () => {
                     ))
                 }
             </div>
-            <div className='px-6'>
-                <p className='flex justify-between items-center'>
+            <div className='px-6 mb-6 items-center'>
+                <p className='flex justify-between items-center mb-2'>
                     <span className='font-light'>Total</span>
                     <span className='font-medium text-2xl'>${totalPrice(context.cartProducts)}</span>
                 </p>
+                <Link to='/my-orders/last'>
+                    <button className='w-full bg-black py-3 text-white rounded-lg cursor-pointer' onClick={() => handleCheckout()}>Checkout</button>
+                </Link>
             </div>
         </aside>
     )
