@@ -62,4 +62,4 @@ const CheckoutSideMenu = () => {
     )
 }
 
-export { CheckoutSideMenu }
+export default CheckoutSideMenu 
